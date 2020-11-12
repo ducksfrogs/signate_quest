@@ -19,3 +19,7 @@ df_categoric = df[col_categoric]
 counts_disease = df_categoric["disease"].value_counts()
 
 counts_disease.plot(kind='bar')
+
+df_numeric.hist(figsize=(12,8))
+
+plt.tight_layout()

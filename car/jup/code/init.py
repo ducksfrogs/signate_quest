@@ -45,14 +45,17 @@ df['Japan']= (origin==3) * 1.0
 scores = []
 reg = RandomForestRegressor()
 
-RFR_grid = {reg:{"n_estimators": [i for i in range(1,21)],
-                 "criterion": ["gini", "entropy"],
+est_range_exp = [1e-1, 1, 1e2, 1e5]
+RFR_grid = {"n_estimators": est_range_exp,
                  "max_depth":[i for i in range(1,5)],
-                 "random_state": [i for i in range(0,10)]}}
+                 "random_state": [i for i in range(0,10)]}
 
-for model, param in tqdm(RFR_grid.items()):
-    reg = GridSearchCV(model, param)
-    reg.fit(trainX, trainY)
-    score = reg.score(testX, testY)
-    scores.append(score)
-    
+#for model, param in tqdm(RFR_grid.items()):
+#    reg = GridSearchCV(model, param)
+#    reg.fit(trainX, trainY)
+#    score = reg.score(testX, testY)
+#    scores.append(score)
+
+
+
+gs = GridSearchCV(reg, RFR_grid, n_jobs=-1, verbose=2, return_train_score=True)

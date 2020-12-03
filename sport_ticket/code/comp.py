@@ -20,4 +20,14 @@ data['week'] = data['gameday'].apply(get_week)
 def get_match(x):
     return x[0:4]
 
+def get_match(x):
+    return x[x.find("第")+1:x.find("節")]
+
 train['match_num'] = train['match'].apply(get_match)
+
+data['match_num'] =data['match'].apply(get_match)
+
+def get_humidity(x):
+    return float(x[:-1])/100
+
+data['humidity'] = data['humidity'].apply(get_humidity)

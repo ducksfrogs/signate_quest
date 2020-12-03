@@ -31,3 +31,7 @@ def get_humidity(x):
     return float(x[:-1])/100
 
 data['humidity'] = data['humidity'].apply(get_humidity)
+
+import matplotlib.pyplot as plt
+
+matplotlib.pyplot.hist(data=y)

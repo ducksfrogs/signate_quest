@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-file_path =  '/valve/train/normal/00.wav'
+file_path =  '../input/normal/00.wav'
 
 y, sr = librosa.load(file_path, sr=None)
 

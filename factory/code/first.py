@@ -28,3 +28,14 @@ plt.plot(normal)
 
 anormal, sr = librosa.load('/dataset/valve/train/normal/00.wav', sr=None)
 plt.plot(anormal, color='orange')
+
+normal = read_data('valve', 'train', 'normal')
+
+normal_mean = np.sqrt(np.mean(normal**2, axis=1))
+
+anomaly = read_data('valve', 'train', 'anormaly')
+
+anomaly_mean = np.sqrt(np.mean(anomaly**2, axis=1))
+
+plt.hist(normal_mean, alpha=0.5, label='normal')
+plt.hist(anomaly_mean, alpha=0.5, label='anomaly')

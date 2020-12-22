@@ -39,3 +39,8 @@ anomaly_mean = np.sqrt(np.mean(anomaly**2, axis=1))
 
 plt.hist(normal_mean, alpha=0.5, label='normal')
 plt.hist(anomaly_mean, alpha=0.5, label='anomaly')
+
+print("Minimum samples per category = ", min(train.labels.value_counts()))
+print("Maximum samples per category = ", max(train.labels.value_counts()))
+
+normal_zc = np.sum(librosa.zero)

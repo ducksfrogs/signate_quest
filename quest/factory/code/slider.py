@@ -26,3 +26,30 @@ test_df['zc'] = np.sum(librosa.zero_crossings(test), axis=1)
 test_df['label'] = np.concatenate([np.zeros(len(test_normal)), np.ones(len(test_anomaly))])
 
 train_X, train_y = train_df[["mean",'zc']], train_df['label']
+test_X, test_y = test_df[["mean","zc"]], test_df['label']
+
+model = RandomForestClassifier(random_state=42)
+
+model.fit(train_X, train_y)
+pred = model.predict(test_x)
+
+print(confusion_matrix(test_y, pred))
+
+train_df[train_df['label'] == 0]['mean'].plot.hist(alpha=0.5, label="normal")
+train_df[train_df['label'] == 1]['mean'].plot.hist(alpha=0.5, label='anomaly')
+test_df[test_df['label'] == 1]['mean'].plot.hist(alpha=0.5, label='anomaly_test')
+
+# StandardScaler
+
+from sklearn import preprocessing
+
+sc = preprocessing.StandardScaler()
+sc.fit(train_X)
+train_X = sc.transform(train_X)
+test_X = sc.transform(test_X)
+
+from sklearn.svm import OneClassSVM
+
+model = OneClassSVM()
+model.fit(train_X)
+pred = model.predict(test_X)

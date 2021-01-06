@@ -17,7 +17,7 @@ def read_data(category):
         dataset.append(y)
     return np.array(dataset)
 
-s = read_data(category)
+train_normal = read_data(category)
 
 import matplotlib.pyplot as plt
 
@@ -29,7 +29,7 @@ anomal_path = '../input/valid_anormaly'
 anormaly, sr = librosa.load(file_path, sr=None)
 plt.plot(anormaly, color='orange')
 
-normal_mean = np.sqrt(np.mean(s**2, axis=1))
+normal_mean = np.sqrt(np.mean(train_normal**2, axis=1))
 
 anormaly = read_data('valid_anormaly')
 
@@ -37,3 +37,11 @@ anormaly_mean = np.sqrt(np.mean(anormaly**2, axis=1))
 
 plt.hist(normal_mean, alpha=0.5)
 plt.hist(anormaly_mean, alpha=0.5)
+
+normal_zc = np.sum(librosa.zero_crossings(normal), axis=1)
+
+train_df = pd.DataFrame()
+train_df['mean'] = normal_mean
+train_df['zc'] = normal_zc
+
+train_df['label'] = np.concatenate([np.zeros(len(train_normal)), np.ones(len(train_normala))])

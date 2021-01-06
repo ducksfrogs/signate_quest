@@ -1,6 +1,8 @@
 from sklearn.ensemble import RandomForestClassifier
 import librosa
 
+from sklearn.ensemble import RandomForestClassifier
+
 import glob
 
 import numpy as np
@@ -27,3 +29,14 @@ train_df = pd.DataFrame()
 train_df['mean'] = train_mean
 train_df['zc'] = train_zc
 train_df['label'] = np.concatenate([np.zeros(len(normals)), np.ones(len(anomaly))])
+
+tainX, trainy = train_df[['mean', 'zc'], train_df['label']
+testX, testy = test_df[['mean', 'zc']], test_df['label']
+
+model = RandomForestClassifier()
+model.fit(trainX, trainy)
+pred = model.predict(testX)
+
+from sklearn.metrics import confusion_matrix
+
+confusion_matrix(testy, pred)

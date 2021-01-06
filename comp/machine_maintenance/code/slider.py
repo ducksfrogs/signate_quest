@@ -45,9 +45,3 @@ test_df['label'] = np.concatenate([np.zeros(len(test_normal)), np.ones(len(test_
  pred = model.predict(test_x)
 
  confusion_matrix(test_y, pred)
-
-
- train_df[train_df['label']==0]['mean'].plot.hist(alpha=0.5, label='Normal')
- train_df[train_df['label']==1]['mean'].plot.hist(alpha=0.5, label='Anomaly(training)')
- test_df[test_df['label']==1]['mean'].plot.hist(alpha=0.5, label='Anomaly(testing)')
- plt.legend()

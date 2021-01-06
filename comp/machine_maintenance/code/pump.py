@@ -50,5 +50,30 @@ for i in range(len(train)):
     melspec_dbs.append(melspec_db.astype(np.float16))
 train_df = pd.DataFrame(melspec_dbs)
 
+test_normal = read_data('pump', 'test', 'normal')
+test_anomaly = read_data('pump', 'test', 'anomaly')
+
+melspec_dbs = []
+
 for i in range(len(test)):
-    melspec =oooo 
+    melspec = librosa.feature.melspectrogram(test[i])
+    melspec_db = librosa.amplitude_to_db(melspec).flatten()
+    melspec_dbs.append(melspec_db.astype(np.float16))
+test_df = pd.DataFrame(melspec_dbs)
+test_df['label'] = np.concatenate([np.zeros(len(test_normal)), np.ones(len(test_anomaly))])
+
+trainX = train_df
+testX, testY = test_df.drop(columns=['label']), test_df['label']
+
+sc = StandardScaler()
+sc.fit(trainX)
+trainX = sc.transform(trainX)
+testX = sc.transform(testX)
+
+model = OneClassSVM()
+
+model.fit(trainX)
+
+pred = model.predict(testX)
+pred = np.where(pred==-1, 1 , 0)
+confusion_matrix(testY, pred)

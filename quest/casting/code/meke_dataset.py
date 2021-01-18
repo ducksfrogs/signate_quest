@@ -1,3 +1,4 @@
+import torch
 from torchvision import transforms, datasets
 import zipfile
 
@@ -27,3 +28,14 @@ image_datasets = {
     'train': datasets.ImageFolder('./image_data/train', data_transforms['train']),
     'val': datasets.ImageFolder('./image_data/val', data_transforms['val'])
 }
+
+image_dataloaders = {
+    'train': torch.utils.data.DataLoader(image_datasets['train'], batch_size=4, shuffle=True, num_workers=0, drop_last=True),
+    'va': torch.utils.data.DataLoader(image_datasets['val'], batch_size=4, shuffle=True, num_workers=0, drop_last=True),
+}
+
+for i, (inputs, labels) in enumerate(image_dataloaders):
+    print(inputs)
+    print(labels)
+    if i == 0:
+        break

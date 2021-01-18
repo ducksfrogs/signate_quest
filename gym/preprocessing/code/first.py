@@ -9,3 +9,7 @@ length = df_data.shape[1]
 df_data.columns = ['市町村名', '2020-03-01_人口', '2020-02-01_人口', '2020-02-01_増減数','2020-02-01-増減率', '2019-02-01_人口', '2019-02-01_増減数', '2019-02-01_増減率']
 
 print(df_data.columns)
+
+df_data = df_data.drop([0,1,2,3,4])
+
+df_data = df_data[~df_data['2020-03-01_人口'].isnull()]

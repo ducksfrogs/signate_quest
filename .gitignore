@@ -71,3 +71,5 @@ geckodriver.log
 *.code-workspace
 .history
 .vscode
+input/
+

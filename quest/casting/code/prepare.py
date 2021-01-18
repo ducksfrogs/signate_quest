@@ -21,13 +21,12 @@ for img in data_file:
 train_val = ['train', 'val']
 
 
-
 for i in train_val:
     tmp_path = './input/{}_data/'.format(i)
     data_file = glob.glob(os.path.join(tmp_path, '*.jpeg'))
     for img in data_file:
         filename = os.path.basename(img)
-        if 'os' in filename:
+        if 'ok' in filename:
             dst = os.path.join(ok_path, filename)
             shutil.copy2(img, dst)
         else:

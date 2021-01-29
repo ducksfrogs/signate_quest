@@ -18,3 +18,10 @@ tmp = np.array([1,2,3,4,5])
 tmp[::-1]
 
 img_resize = transform.resize(img, output_shape=(100,100))
+
+img_rotete = transform.rotate(img, angle=80)
+
+rot = transform.AffineTransform(translation=(40,40))
+img_affine = transform.warp(img, rot)
+
+plt.imshow(img_affine)

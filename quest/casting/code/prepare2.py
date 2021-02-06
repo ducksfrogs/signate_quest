@@ -99,4 +99,39 @@ def train_model(model, criterion, optimizer, num_epochs=5, is_saved=False):
 
                 loss = criterion(outputs, labels)
                 print(" loaders:{}".format(i+1), ' loss:{}'.format(loss))
-                
+
+                if phase == 'train':
+                    loss.backward()
+                    optimizer.step()
+
+                running_loss += loss.item() * inputs.size(0)
+                running_corrects += torch.sum(preds == labels.data)
+
+
+            epoch_loss = running_loss / dataset_sizes[phase]
+            epoch_acc = running_corrects.double() / dataset_sizes[phase]
+            print("{} loss: {:.4f} Acc: {:4f}".format(phase, epoch_loss, epoch_acc))
+
+            if phase == 'val' and epoch_acc > best_acc:
+                best_acc = epoch_acc
+                if(is_saved):
+                    torch.save(model.state_dict(), './original_model_{}.pth'.format(epoch))
+    print("Best val Acc: {:4f}".format(best_acc))
+
+
+df_test = pd.Dataframe(data=os.listdir('./test_data/'))
+df_test = df_test.rename(columns={0: 'filename'})
+df_test['target'] = 0
+
+df_test.loc[df_test['filename'].str.contains('ok'), 'target'] = 1
+
+df_test.to_csv("df_test.csv", index=False)
+
+
+
+
+test_transforms = transforms.Compose([
+    transforms.Resize(256),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+])

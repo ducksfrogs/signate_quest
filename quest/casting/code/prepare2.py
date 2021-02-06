@@ -72,3 +72,31 @@ from torchvision import datasets, models, transforms
 from PIL import Image, ImageFilter
 
 DEVICE = 'cpu'
+
+def train_model(model, criterion, optimizer, num_epochs=5, is_saved=False):
+    best_acc = 0.0
+
+    for epoch in range(num_epochs):
+        for phase in ['train', 'val']:
+            print("{} phase".format(phase))
+
+            if phase == 'train':
+                model.train()
+            else:
+                model.eval()
+
+            running_loss = 0.0
+            running_correct = 0
+
+            for i,(inputs, labels) in enumerate(image_dataloaders[phase]):
+                inputs = inputs.to(DEVICE)
+                labels = labels.to(DEVICE)
+
+                optimizer.zero_grad()
+
+                outputs = model(inputs)
+                _, preds = torch.max(outputs, 1)
+
+                loss = criterion(outputs, labels)
+                print(" loaders:{}".format(i+1), ' loss:{}'.format(loss))
+                

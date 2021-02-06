@@ -41,3 +41,34 @@ image_dataloaders = {
  'train': torch.utils.data.DataLoader(image_datasets['train'], batch_size=4, num_workers=0, drop_last=True)
  'val': torch.utils.data.DataLoader(image_datasets['val'], batch_size=4, num_workers=0, drop_last=True)
 }
+
+
+from torchvision import datasets, models, transforms
+import torch.nn as nn
+import torch.optim as optim
+
+model_ft = models.resnet18(pretraind=False)
+
+device = 'cpu'
+TARGET_NUM  = 10
+
+def get_model(target_num, isPretrained=False):
+    model_ft = models.resnet18(pretraind=isPretrained)
+    model_ft.fc = nn.Linear(512, target_num)
+    model_ft = model_ft.to(device)
+    return model_ft
+
+model = get_model(TARGET_NUM, isPretrained=False)
+
+optimizer = optim.SGD(model_ft.parameters(),lr=0.0001, momentum=0.9)
+
+criterion = nn.CrossEntropyLoss()
+
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import Dataset
+from torchvision import datasets, models, transforms
+from PIL import Image, ImageFilter
+
+DEVICE = 'cpu'

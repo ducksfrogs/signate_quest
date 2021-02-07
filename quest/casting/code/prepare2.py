@@ -128,6 +128,8 @@ df_test.loc[df_test['filename'].str.contains('ok'), 'target'] = 1
 df_test.to_csv("df_test.csv", index=False)
 
 
+import pandas as pd
+import numpy as np
 
 
 test_transforms = transforms.Compose([
@@ -135,3 +137,54 @@ test_transforms = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
 ])
+
+
+class Test_Datasets(Dataset):
+
+    def __init__(self, data_transform):
+        self.df = pd.read_csv(('./df_test.csv', names=['filename', 'target']))
+        self.data_transform = data_transform
+
+    def __len__(self):
+        return len(self.df)
+
+    def __getitem__(self, index):
+
+        file = self.df['filename'][index]
+        image = Image.open('./test_data/'+file)
+        image = self.data_transform(image)
+
+        return image, file
+
+
+ test_dataset = Test_Datasets(data_transform=test_transforms)
+
+
+ test_dataloader = torch.utils.data.DataLoader(dataset=test_dataset,
+                                                batch_size=1,
+                                                shuffle=False,
+                                                num_workers=0,
+                                                drop_last=True)
+
+def  get_model(target_num, isPretrained=False):
+    model_ft = models.resnet18(pretraind=isPretrained)
+    model_ft.fc = nn.Linear(512, target_num)
+    model_ft = model_ft.to(DEVICE)
+
+best_model = get_model(target_num=2)
+
+best_model.load_state_dict(torch.load('./original_model_33.pth', map_location=lambda storage, loc: storage), strict=True)
+
+pred = []
+
+for i, (inputs, labels) in enumerate(test_dataloader):
+    inputs = inputs.to(DEVICE)
+
+    best_model.eval()
+    outputs = best_model(inputs)
+
+    _, preds = torch.max(outputs, 1)
+
+    pred.append(preds.item())
+
+df_test['pred'] = pred

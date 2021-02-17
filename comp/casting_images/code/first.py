@@ -9,6 +9,8 @@ import random
 all_image_paths = list(data_root.glob('./*'))
 all_image_paths = [str(path) for path in all_image_paths]
 
+AUTOTUNE = tf.data.experimental.AUTOTUNE
+
 import os
 import IPython.display as display
 import random
@@ -59,3 +61,24 @@ def preprocess_image(image):
 def load_and_preprocess_image(path):
     image = tf.io.read_file(path)
     return preprocess_image(image)
+
+
+path_ds = tf.data.Dataset.from_tensor_slices(all_image_paths)
+
+image_ds = path_ds.map(load_and_preprocess_image, num_parallel_calls=AUTOTUNE)
+
+plt.figure(figsize=(8,8))
+
+for n, image in enumerate(image_ds.take(4)):
+    plt.subplot(2,2,n+1)
+    plt.imshow(image)
+    plt.grid(False)
+    plt.xticks([])
+    plt.yticks([])
+    plt.xlabel(caption_image(all_image_paths[n]))
+    plt.show()
+
+label_ds = tf.data.Dataset.from_tensor_slices(tf.cast(all_image_labels, tf.int64))
+
+for label in label_ds.take(4):
+    print(label_names[label.numpy()])

@@ -73,3 +73,6 @@ geckodriver.log
 .vscode
 input/
 
+train_data/
+val_data/
+

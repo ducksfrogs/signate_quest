@@ -24,3 +24,20 @@ image_dataloaders = {
     'train': torch.utils.data.DataLoader(image_datasets['train'], batch_size=4, shuffle=True, num_workers=0, drop_last=True),
     'val': torch.utils.data.DataLoader(image_datasets['val'], batch_size=4, shuffle=False, num_workers=0, drop_last=True),
     }
+
+
+from torchvision import datasets, models, transforms
+
+model_ft = models.resnet18(pretrained=False)
+
+print(model_ft)
+
+device = 'cpu'
+TARGET_NUM = 10
+
+def get_model(target_num, isPretrained=False):
+    model_ft = models.resnet18(pretrained=isPretrained)
+    model_ft = model_ft.to(device)
+    return model_ft
+
+model = get_model(TARGET_NUM, isPretrained=False)
